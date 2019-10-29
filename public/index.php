@@ -7,6 +7,7 @@ use Framework\Http\Router\Router;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Framework\Http\ActionResolver;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -20,6 +21,7 @@ $routes->get('blog', '/blog', Action\Blog\IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => '\d+']);
 
 $router = new Router($routes);
+$resolver = new ActionResolver();
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
@@ -30,7 +32,7 @@ try {
     }
     /** @var callable $action */
     $handler = $result->getHandler();
-    $action = is_string($handler) ? new $handler() : $handler;
+    $action = $resolver->resolve($handler);
     $response = $action($request);
 } catch (RequestNotMatchedException $e){
     $response = new HtmlResponse('Undefined page', 404);
