@@ -6,7 +6,7 @@ use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 use Framework\Http\Router\AuraRouterAdapter;
 use App\Http\Middleware;
-use Framework\Http\Pipeline\Pipeline;
+use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 
 chdir(dirname(__DIR__));
@@ -31,9 +31,9 @@ $routes->get('cabinet', '/cabinet', [
 
 $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver();
-$pipeline = new Pipeline();
+$app = new Application($resolver);
 
-$pipeline->pipe($resolver->resolve(Middleware\ProfilerMiddleware::class));
+$app->pipe(Middleware\ProfilerMiddleware::class);
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
@@ -42,12 +42,10 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $handler = $result->getHandler();
-    $middleware = $resolver->resolve($handler);
-    $pipeline->pipe($middleware);
+    $app->pipe($result->getHandler());
 } catch (RequestNotMatchedException $e){}
 
-$response = $pipeline($request, new Middleware\NotFoundHandler());
+$response = $app($request, new Middleware\NotFoundHandler());
 
 ### Postprocessing
 $response = $response->withHeader('X-Developer', 'Sergey');
