@@ -43,14 +43,7 @@ try {
         $request = $request->withAttribute($attribute, $value);
     }
     $handler = $result->getHandler();
-    if (is_array($handler)) {
-        $middleware = new Pipeline();
-        foreach ($handler as $item) {
-            $middleware->pipe($resolver->resolve($item));
-        }
-    } else {
-        $middleware = $resolver->resolve($handler);
-    }
+    $middleware = $resolver->resolve($handler);
     $pipeline->pipe($middleware);
 } catch (RequestNotMatchedException $e){}
 
