@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Action;
-use Framework\Http\Router\Exception\RequestNotMatchedException;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -42,7 +42,7 @@ $app->pipe(new Framework\Http\Middleware\DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-$response = $app->run($request);
+$response = $app->run($request, new Response());
 
 ### Sending
 $emitter = new SapiEmitter();
