@@ -31,7 +31,7 @@ $routes->get('cabinet', '/cabinet', [
 ]);
 
 $router = new AuraRouterAdapter($aura);
-$resolver = new MiddlewareResolver();
+$resolver = new MiddlewareResolver(new Response());
 $app = new Application($resolver, new Middleware\NotFoundHandler());
 
 $app->pipe(new Middleware\ErrorHandlerMiddleware($params['debug']));
@@ -42,7 +42,7 @@ $app->pipe(new Framework\Http\Middleware\DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-$response = $app->run($request, new Response());
+$response = $app->handle($request);
 
 ### Sending
 $emitter = new SapiEmitter();

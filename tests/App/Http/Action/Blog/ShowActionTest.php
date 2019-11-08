@@ -4,7 +4,9 @@ namespace Tests\App\Http\Action\Blog;
 
 use App\Http\Action\Blog\ShowAction;
 use App\Http\Middleware\NotFoundHandler;
+use Framework\Http\Pipeline\MiddlewareResolver;
 use PHPUnit\Framework\TestCase;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequest;
 
@@ -13,10 +15,13 @@ class ShowActionTest extends TestCase
     public function testSuccess()
     {
         $action = new ShowAction();
+        $resolver = new MiddlewareResolver(new Response());
+        $middleware = $resolver->resolve($action);
+
         $request = (new ServerRequest())
             ->withAttribute('id', $id = 2);
 
-        $response = $action($request, new NotFoundHandler());
+        $response = $middleware->process($request, new NotFoundHandler());
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertJsonStringEqualsJsonString(
