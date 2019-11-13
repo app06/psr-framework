@@ -16,7 +16,7 @@ class ApplicationTest extends TestCase
 {
     public function testPipe(): void
     {
-        $app = new Application(new MiddlewareResolver(), new DefaultHandler());
+        $app = new Application(new MiddlewareResolver(new Response()), new DefaultHandler());
 
         $app->pipe(new Middleware1());
         $app->pipe(new Middleware2());
