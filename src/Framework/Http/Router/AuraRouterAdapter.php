@@ -2,7 +2,6 @@
 
 namespace Framework\Http\Router;
 
-use Aura\Router\Exception\ImmutableProperty;
 use Aura\Router\Exception\RouteNotFound;
 use Aura\Router\Route;
 use Aura\Router\RouterContainer;
@@ -64,6 +63,7 @@ class AuraRouterAdapter implements Router
         if ($methods = $data->methods) {
             $route->allows($methods);
         }
+
         $this->aura->getMap()->addRoute($route);
     }
 }
