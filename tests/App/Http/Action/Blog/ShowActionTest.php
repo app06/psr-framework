@@ -6,6 +6,7 @@ use App\Http\Action\Blog\ShowAction;
 use App\Http\Middleware\NotFoundHandler;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use PHPUnit\Framework\TestCase;
+use Tests\Framework\Http\DummyContainer;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequest;
@@ -15,7 +16,7 @@ class ShowActionTest extends TestCase
     public function testSuccess()
     {
         $action = new ShowAction();
-        $resolver = new MiddlewareResolver(new Response());
+        $resolver = new MiddlewareResolver(new Response(), new DummyContainer());
         $middleware = $resolver->resolve($action);
 
         $request = (new ServerRequest())

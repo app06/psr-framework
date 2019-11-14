@@ -2,6 +2,7 @@
 
 namespace Framework\Http\Pipeline;
 
+use Framework\Container\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -14,10 +15,12 @@ use Zend\Stratigility\MiddlewarePipe;
 class MiddlewareResolver
 {
     private $responsePrototype;
+    private $container;
 
-    public function __construct(ResponseInterface $responsePrototype)
+    public function __construct(ResponseInterface $responsePrototype, Container $container)
     {
         $this->responsePrototype = $responsePrototype;
+        $this->container = $container;
     }
 
     public function resolve($handler): MiddlewareInterface
@@ -26,9 +29,9 @@ class MiddlewareResolver
             return $this->createPipe($handler);
         }
 
-        if (\is_string($handler)) {
+        if (\is_string($handler) && $this->container->has($handler)) {
             return new CallableMiddlewareDecorator(function(ServerRequestInterface $request, RequestHandlerInterface $next) use ($handler) {
-                $middleware = $this->resolve(new $handler());
+                $middleware = $this->resolve($this->container->get($handler));
                 return $middleware->process($request, $next);
             });
         }
