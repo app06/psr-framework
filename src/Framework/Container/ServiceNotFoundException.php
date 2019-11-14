@@ -3,7 +3,7 @@
 namespace Framework\Container;
 
 
-class ServiceNotFoundException extends \InvalidArgumentException
+class ServiceNotFoundException extends \InvalidArgumentException implements NotFoundExceptionInterface
 {
 
 }

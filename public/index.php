@@ -5,14 +5,12 @@ use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 /**
- * @var \Framework\Container\Container $container
+ * @var \Framework\Container\ContainerInterface $container
  * @var Application $app
  */
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
-
-### Initialization
 
 $container = require 'config/container.php';
 $app = $container->get(Application::class);

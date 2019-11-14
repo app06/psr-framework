@@ -2,7 +2,7 @@
 
 namespace Framework\Http\Pipeline;
 
-use Framework\Container\Container;
+use Framework\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +17,7 @@ class MiddlewareResolver
     private $responsePrototype;
     private $container;
 
-    public function __construct(ResponseInterface $responsePrototype, Container $container)
+    public function __construct(ResponseInterface $responsePrototype, ContainerInterface $container)
     {
         $this->responsePrototype = $responsePrototype;
         $this->container = $container;
