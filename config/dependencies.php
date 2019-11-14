@@ -32,14 +32,6 @@ $container->set(MiddlewareResolver::class, function (Container $container) {
     return new MiddlewareResolver(new Response(), $container);
 });
 
-$container->set(RouteMiddleware::class, function (Container $container) {
-    return new RouteMiddleware($container->get(Router::class));
-});
-
-$container->set(DispatchMiddleware::class, function (Container $container) {
-    return new DispatchMiddleware($container->get(MiddlewareResolver::class));
-});
-
 $container->set(Router::class, function () {
     return new AuraRouterAdapter(new Aura\Router\RouterContainer());
 });
