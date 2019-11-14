@@ -13,14 +13,8 @@ use App\Http\Action;
 
 return [
     'dependencies' => [
-        'invokables' => [
-            Middleware\CredentialsMiddleware::class,
-            Middleware\ProfilerMiddleware::class,
-            Action\HelloAction::class,
-            Action\AboutAction::class,
-            Action\CabinetAction::class,
-            Action\Blog\IndexAction::class,
-            Action\Blog\ShowAction::class,
+        'abstract_factories' => [
+            \Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory::class
         ],
         'factories' => [
             Application::class => function (ContainerInterface $container) {
@@ -41,12 +35,6 @@ return [
             },
             Middleware\ErrorHandlerMiddleware::class => function (ContainerInterface $container) {
                 return new Middleware\ErrorHandlerMiddleware($container->get('config')['debug']);
-            },
-            DispatchMiddleware::class => function (ContainerInterface $container) {
-                return new DispatchMiddleware($container->get(MiddlewareResolver::class));
-            },
-            RouteMiddleware::class => function (ContainerInterface $container) {
-                return new RouteMiddleware($container->get(Router::class));
             },
         ],
     ],
