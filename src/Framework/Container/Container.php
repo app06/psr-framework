@@ -7,6 +7,11 @@ class Container
     private $definitions = [];
     private $results = [];
 
+    public function __construct(array $definitions = [])
+    {
+        $this->definitions = $definitions;
+    }
+
     public function get($id)
     {
         if (array_key_exists($id, $this->results)) {
