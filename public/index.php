@@ -2,6 +2,9 @@
 
 use App\Http\Action;
 use Framework\Container\Container;
+use Framework\Http\Middleware\DispatchMiddleware;
+use Framework\Http\Middleware\RouteMiddleware;
+use Framework\Http\Router\Router;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -22,33 +25,51 @@ $container->set('config', [
     'users' => ['admin' => 'password']
 ]);
 
-$container->set('middleware.basic_auth', function (Container $container) {
+$container->set(Middleware\BasicAuthMiddleware::class, function (Container $container) {
     return new Middleware\BasicAuthMiddleware($container->get('config')['users']);
 });
 
-$container->set('middleware.error_handler', function (Container $container) {
+$container->set(Middleware\ErrorHandlerMiddleware::class, function (Container $container) {
     return new Middleware\ErrorHandlerMiddleware($container->get('config')['debug']);
 });
 
-$aura = new Aura\Router\RouterContainer();
-$routes = $aura->getMap();
+$container->set(Router::class, function () {
+    $aura = new Aura\Router\RouterContainer();
+    $routes = $aura->getMap();
 
-$routes->get('home', '/', Action\HelloAction::class);
-$routes->get('about', '/about', Action\AboutAction::class);
-$routes->get('blog', '/blog', Action\Blog\IndexAction::class);
-$routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class)->tokens(['id' => '\d+']);
-$routes->get('cabinet', '/cabinet',Action\CabinetAction::class);
+    $routes->get('home', '/', Action\HelloAction::class);
+    $routes->get('about', '/about', Action\AboutAction::class);
+    $routes->get('blog', '/blog', Action\Blog\IndexAction::class);
+    $routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class)->tokens(['id' => '\d+']);
+    $routes->get('cabinet', '/cabinet',Action\CabinetAction::class);
 
-$router = new AuraRouterAdapter($aura);
-$resolver = new MiddlewareResolver(new Response());
-$app = new Application($resolver, new Middleware\NotFoundHandler());
+    return new AuraRouterAdapter($aura);
+});
 
-$app->pipe($container->get('middleware.error_handler'));
+$container->set(MiddlewareResolver::class, function () {
+    return new MiddlewareResolver(new Response());
+});
+
+$container->set(Application::class, function (Container $container) {
+    return new Application($container->get(MiddlewareResolver::class), new Middleware\NotFoundHandler());
+});
+
+$container->set(RouteMiddleware::class, function (Container $container) {
+    return new RouteMiddleware($container->get(Router::class));
+});
+
+$container->set(DispatchMiddleware::class, function (Container $container) {
+    return new DispatchMiddleware($container->get(MiddlewareResolver::class));
+});
+
+$app = $container->get(Application::class);
+
+$app->pipe($container->get(Middleware\ErrorHandlerMiddleware::class));
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(Middleware\CredentialsMiddleware::class);
-$app->pipe('cabinet', $container->get('middleware.basic_auth'));
-$app->pipe(new Framework\Http\Middleware\RouteMiddleware($router));
-$app->pipe(new Framework\Http\Middleware\DispatchMiddleware($resolver));
+$app->pipe('cabinet', $container->get(Middleware\BasicAuthMiddleware::class));
+$app->pipe($container->get(RouteMiddleware::class));
+$app->pipe($container->get(DispatchMiddleware::class));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
