@@ -15,12 +15,8 @@ class HelloAction
         $this->template = $template;
     }
 
-    public function __invoke(ServerRequestInterface $request)
+    public function __invoke()
     {
-        $name = $request->getQueryParams()['name'] ?? 'Guest';
-
-        return new HtmlResponse($this->template->render('hello', [
-            'name' => $name
-        ]));
+        return new HtmlResponse($this->template->render('hello'));
     }
 }
