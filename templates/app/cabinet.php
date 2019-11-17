@@ -10,17 +10,19 @@
 <?php $this->params['title'] = 'Cabinet'; ?>
 
 <?php $this->beginBlock('sidebar') ?>
-<div class="panel panel-default">
-    <div class="panel-heading">Cabinet</div>
-    <div class="panel-body">
-        Cabinet navigation
+    <div class="panel panel-default">
+        <div class="panel-heading">Cabinet</div>
+        <div class="panel-body">
+            Cabinet navigation
+        </div>
     </div>
-</div>
 <?php $this->endBlock(); ?>
 
-<ul class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li class="active">Cabinet</li>
-</ul>
+<?php $this->beginBlock('breadcrumbs') ?>
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Cabinet</li>
+    </ul>
+<?php $this->endBlock(); ?>
 
 <h1>Cabinet of <?= htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE) ?></h1>
