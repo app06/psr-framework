@@ -54,7 +54,11 @@ class PhpRenderer implements TemplateRenderer
 
     public function renderBlock($name): string
     {
-        return $this->blocks[$name] ?? '';
+        $block = $this->blocks[$name] ?? null;
+        if ($block instanceof \Closure) {
+            return $block();
+        }
+        return $block ?? '';
     }
 
     public function ensureBlock($name): bool
@@ -69,5 +73,13 @@ class PhpRenderer implements TemplateRenderer
     private function hasBlock($name): bool
     {
         return array_key_exists($name, $this->blocks);
+    }
+
+    public function block($name, $content): void
+    {
+        if ($this->hasBlock($name)) {
+            return;
+        }
+        $this->blocks[$name] = $content;
     }
 }
