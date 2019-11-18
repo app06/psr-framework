@@ -82,4 +82,9 @@ class PhpRenderer implements TemplateRenderer
         }
         $this->blocks[$name] = $content;
     }
+
+    public function encode($string): string
+    {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
+    }
 }
