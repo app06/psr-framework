@@ -5,9 +5,9 @@ use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
-use Framework\Template\Php\Extension\RouteExtension;
-use Framework\Template\Php\PhpRenderer;
 use Framework\Template\TemplateRenderer;
+use Framework\Template\Twig\Extension\RouteExtension;
+use Framework\Template\Twig\TwigRenderer;
 use Psr\Container\ContainerInterface;
 use Zend\Diactoros\Response;
 
@@ -37,10 +37,28 @@ return [
                 );
             },
             TemplateRenderer::class => function (ContainerInterface $container) {
-                $renderer = new PhpRenderer('templates');
-                $renderer->addExtension($container->get(RouteExtension::class));
-                return $renderer;
+                return new TwigRenderer($container->get(Twig\Environment::class), '.html.twig');
             },
+            Twig\Environment::class => function(ContainerInterface $container) {
+                $templateDir = 'templates';
+                $cacheDir = 'var/cache/twig';
+                $debug = $container->get('config')['debug'];
+                $loader = new Twig\Loader\FilesystemLoader();
+                $loader->addPath($templateDir);
+                $environment = new Twig\Environment($loader, [
+                    'cache' => $debug ? false : $cacheDir,
+                    'debug' => $debug,
+                    'strict_variables' => $debug,
+                    'auto_reload' => $debug,
+                ]);
+                if ($debug) {
+                    $environment->addExtension(new Twig\Extension\DebugExtension());
+                }
+
+                $environment->addExtension($container->get(RouteExtension::class));
+
+                return $environment;
+            }
         ],
     ],
 ];
