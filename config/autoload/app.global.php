@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Middleware;
+use App\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
+use App\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
+use App\Http\Middleware\ErrorHandler\PrettyErrorResponseGenerator;
 use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -28,12 +31,17 @@ return [
             MiddlewareResolver::class => function (ContainerInterface $container) {
                 return new MiddlewareResolver(new Response(), $container);
             },
-            Middleware\ErrorHandlerMiddleware::class => function (ContainerInterface $container) {
-                return new Middleware\ErrorHandlerMiddleware(
-                    $container->get('config')['debug'],
-                    $container->get(TemplateRenderer::class)
+            ErrorHandlerMiddleware::class => function(ContainerInterface $container) {
+                return new ErrorHandlerMiddleware(
+                    $container->get(ErrorResponseGenerator::class)
                 );
             },
+            ErrorResponseGenerator::class => function(ContainerInterface $container) {
+                return new PrettyErrorResponseGenerator(
+                    $container->get('config')['debug'],
+                    $container->get(TemplateRenderer::class),
+                );
+            }
         ],
     ],
 ];
