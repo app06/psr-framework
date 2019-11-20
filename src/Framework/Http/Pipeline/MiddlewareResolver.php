@@ -30,10 +30,7 @@ class MiddlewareResolver
         }
 
         if (\is_string($handler) && $this->container->has($handler)) {
-            return new CallableMiddlewareDecorator(function(ServerRequestInterface $request, RequestHandlerInterface $next) use ($handler) {
-                $middleware = $this->resolve($this->container->get($handler));
-                return $middleware->process($request, $next);
-            });
+            return new LazyMiddlewareDecorator($this, $this->container, $handler);
         }
 
         if ($handler instanceof MiddlewareInterface) {

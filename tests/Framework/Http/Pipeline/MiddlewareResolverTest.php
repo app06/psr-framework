@@ -53,7 +53,7 @@ class MiddlewareResolverTest extends TestCase
     public function getValidHandlers(): array
     {
         return [
-            'Callable Callback' => [function (ServerRequestInterface $request, callable $next) {
+            'SinglePass Callback' => [function (ServerRequestInterface $request, callable $next) {
                 if ($request->getAttribute('next')) {
                     return $next($request);
                 }
@@ -81,7 +81,7 @@ class MiddlewareResolverTest extends TestCase
         $resolver = new MiddlewareResolver(new Response(), new DummyContainer());
         $middleware = $resolver->resolve([
             new DummyMiddleware(),
-            new CallableMiddleware()
+            new SinglePassMiddleware()
         ]);
 
         $response = $middleware->process(
