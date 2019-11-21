@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Middleware\ErrorHandler;
+namespace Infrastructure\Framework\Http\Middleware\ErrorHandler;
 
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
 use Framework\Template\TemplateRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Stratigility\Utils;
 
 class PrettyErrorResponseGenerator implements ErrorResponseGenerator

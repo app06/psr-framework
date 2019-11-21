@@ -6,7 +6,7 @@ use Framework\Http\Middleware\RouteMiddleware;
 
 /** @var \Framework\Http\Application $app */
 
-$app->pipe(Middleware\ErrorHandler\ErrorHandlerMiddleware::class);
+$app->pipe(Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe('cabinet', Middleware\BasicAuthMiddleware::class);

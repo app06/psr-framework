@@ -1,15 +1,14 @@
 <?php
 
 use App\Http\Middleware;
-use App\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
-use App\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
-use App\Http\Middleware\ErrorHandler\PrettyErrorResponseGenerator;
-use App\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use Framework\Http\Application;
+use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Framework\Template\TemplateRenderer;
+use Infrastructure\Framework\Http\Middleware\ErrorHandler\PrettyErrorResponseGenerator;
 use Psr\Container\ContainerInterface;
 use Zend\Diactoros\Response;
 
@@ -39,7 +38,7 @@ return [
             },
             ErrorResponseGenerator::class => function(ContainerInterface $container) {
                 if ($container->get('config')['debug']) {
-                    return new WhoopsErrorResponseGenerator(
+                    return new Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator(
                         $container->get(Whoops\RunInterface::class),
                         new Zend\Diactoros\Response()
                     );
