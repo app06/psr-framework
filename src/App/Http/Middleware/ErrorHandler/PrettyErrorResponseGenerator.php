@@ -13,20 +13,28 @@ class PrettyErrorResponseGenerator implements ErrorResponseGenerator
 {
     private $views;
     private $template;
+    private $response;
 
-    public function __construct(TemplateRenderer $template, array $views)
+    public function __construct(TemplateRenderer $template, ResponseInterface $response, array $views)
     {
         $this->views = $views;
         $this->template = $template;
+        $this->response = $response;
     }
 
     public function generate(\Throwable $e, ServerRequestInterface $request): ResponseInterface
     {
-        $code = Utils::getStatusCode($e, new Response());
-        return new HtmlResponse($this->template->render($this->getView($code), [
-            'request' => $request,
-            'exception' => $e,
-        ]), $code);
+        $code = Utils::getStatusCode($e, $this->response);
+
+        $response = $this->response->withStatus($code);
+        $response
+            ->getBody()
+            ->write($this->template->render($this->getView($code), [
+                'request' => $request,
+                'exception' => $e,
+            ]));
+
+        return $response;
     }
 
     private function getView($code): string
