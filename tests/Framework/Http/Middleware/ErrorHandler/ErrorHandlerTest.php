@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequest;
 
