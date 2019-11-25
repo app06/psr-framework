@@ -13,16 +13,26 @@ class CacheClearCommand
     {
         echo 'Clearing cache' . PHP_EOL;
 
-        $alias = $args[0] ?? null;
+        $alias = $args[0] ?? '';
 
-        if (!empty($alias)) {
+        if (empty($alias)) {
+            $options = array_merge(['all'], array_keys($this->paths));
+            do {
+                fwrite(\STDOUT, 'Choose path [' . implode(',', $options) . ']: ');
+                $choose = trim(fgets(\STDIN));
+            } while (!\in_array($choose, $options, true));
+            $alias = $choose;
+        }
+
+        if ($alias === 'all') {
+            $paths = $this->paths;
+        } else {
             if (!array_key_exists($alias, $this->paths)) {
                 throw new \InvalidArgumentException('Unknown path alias "' . $alias . '"');
             }
             $paths = [$alias => $this->paths[$alias]];
-        } else {
-            $paths = $this->paths;
         }
+
         foreach ($paths as $path) {
             if (file_exists($path)) {
                 echo 'Remove ' . $path . PHP_EOL;
@@ -40,6 +50,7 @@ class CacheClearCommand
         if (!file_exists($path)) {
             throw new \RuntimeException('Undefined path ' . $path);
         }
+
         if (is_dir($path)) {
             foreach (scandir($path, SCANDIR_SORT_ASCENDING) as $item) {
                 if ($item === '.' || $item === '..') {
@@ -47,6 +58,7 @@ class CacheClearCommand
                 }
                 $this->delete($path . DIRECTORY_SEPARATOR . $item);
             }
+
             if (!rmdir($path)) {
                 throw new \RuntimeException('Unable to delete directory ' . $path);
             }
