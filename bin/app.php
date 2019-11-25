@@ -2,6 +2,7 @@
 <?php
 
 use App\Console\Command\CacheClearCommand;
+use Framework\Console\Application;
 use Framework\Console\Input;
 use Framework\Console\Output;
 
@@ -17,23 +18,7 @@ $container = require 'config/container.php';
 $commands = [
     $container->get(CacheClearCommand::class),
 ];
-$input = new Input($argv);
-$output = new Output();
-$name = $input->getArgument(0);
 
-if (!empty($name)) {
-    foreach ($commands as $command) {
-        if ($command->getName() === $name) {
-            $command->execute($input, $output);
-            exit;
-        }
-    }
-    throw new InvalidArgumentException('Undefined command ' . $name);
-}
-
-$output->writeln('<comment>Available commands:</comment>');
-$output->writeln('');
-foreach ($commands as $command) {
-    $output->writeln('<info>' . $command->getName() . '</info>' . "\t" . $command->getDescription());
-}
-$output->writeln('');
+$cli = new Application();
+$cli->add($container->get(CacheClearCommand::class));
+$cli->run(new Input($argv), new Output());
