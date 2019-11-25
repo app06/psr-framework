@@ -1,6 +1,7 @@
 <?php
 
 namespace Infrastructure\Framework\Http\Middleware\ErrorHandler;
+
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 

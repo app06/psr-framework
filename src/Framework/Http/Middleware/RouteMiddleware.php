@@ -1,6 +1,7 @@
 <?php
 
 namespace Framework\Http\Middleware;
+
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\Result;
 use Framework\Http\Router\Router;
@@ -26,7 +27,7 @@ class RouteMiddleware implements MiddlewareInterface
                 $request = $request->withAttribute($attribute, $value);
             }
             return $handler->handle($request->withAttribute(Result::class, $result));
-        } catch (RequestNotMatchedException $e){
+        } catch (RequestNotMatchedException $e) {
             return $handler->handle($request);
         }
     }

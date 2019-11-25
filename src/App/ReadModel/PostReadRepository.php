@@ -1,6 +1,7 @@
 <?php
 
 namespace App\ReadModel;
+
 use App\ReadModel\Views\PostView;
 
 class PostReadRepository

@@ -2,7 +2,6 @@
 
 namespace Framework\Http\Router;
 
-
 class RouteData
 {
     public $name;

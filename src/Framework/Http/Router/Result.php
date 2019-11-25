@@ -1,5 +1,6 @@
 <?php
 namespace Framework\Http\Router;
+
 class Result
 {
     private $name;
