@@ -20,5 +20,10 @@ $commands = [
 ];
 
 $cli = new Application();
-$cli->add($container->get(CacheClearCommand::class));
+
+$commands = $container->get('config')['console']['commands'];
+foreach ($commands as $command) {
+    $cli->add($container->get($command));
+}
+
 $cli->run(new Input($argv), new Output());
