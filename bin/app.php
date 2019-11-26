@@ -1,9 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-use App\Console\Command\CacheClearCommand;
-use Framework\Console\Input;
-use Framework\Console\Output;
 use Symfony\Component\Console\Application;
 
 chdir(dirname(__DIR__));
