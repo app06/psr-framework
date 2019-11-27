@@ -28,7 +28,7 @@
 
     {% for comment in post.comments %}
         <div class="card mb-3">
-            <div class="panel-heading">
+            <div class="card-header">
                 <span class="float-right">{{ comment.date|date('Y-m-d') }}</span>
                 {{ comment.author }}
             </div>

@@ -2,3 +2,5 @@
 /phpunit.xml
 .idea
 .phpunit.result.cache
+/public/build
+/node_modules
