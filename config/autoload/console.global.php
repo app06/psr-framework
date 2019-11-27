@@ -6,7 +6,6 @@ return [
     'dependencies' => [
         'factories' => [
             Command\CacheClearCommand::class => Infrastructure\App\Console\Command\CacheClearCommandFactory::class,
-            Command\FixtureCommand::class => Infrastructure\App\Console\Command\FixtureCommandFactory::class,
             Doctrine\Migrations\Tools\Console\Command\DiffCommand::class => Infrastructure\App\Doctrine\Factory\DiffCommandFactory::class,
         ],
     ],
@@ -21,7 +20,6 @@ return [
             Doctrine\Migrations\Tools\Console\Command\UpToDateCommand::class,
             Doctrine\Migrations\Tools\Console\Command\StatusCommand::class,
             Doctrine\Migrations\Tools\Console\Command\VersionCommand::class,
-            Command\FixtureCommand::class,
         ],
         'cachePaths' => [
             'twig' => 'var/cache/twig',
