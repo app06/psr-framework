@@ -22,6 +22,7 @@ return [
             Doctrine\Migrations\Tools\Console\Command\VersionCommand::class,
         ],
         'cachePaths' => [
+            'doctrine' => 'var/cache/doctrine',
             'twig' => 'var/cache/twig',
         ],
     ],
