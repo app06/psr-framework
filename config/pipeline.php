@@ -11,6 +11,7 @@ $app->pipe(Middleware\ResponseLoggerMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe('cabinet', Middleware\BasicAuthMiddleware::class);
+$app->pipe(Middleware\EmptyResponseMiddleware::class);
 
 $app->pipe(RouteMiddleware::class);
 
